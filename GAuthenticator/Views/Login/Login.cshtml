@@ -1,0 +1,69 @@
+﻿@model GAuthenticator.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login Page</h2>
+@if (ViewBag.Status == null || !ViewBag.Status)
+{
+    <div>@ViewBag.Message</div>
+    <div>
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+                <label for="UserName">UserName : </label>
+                @Html.TextBoxFor(a => a.UserName, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="Password">Password : </label>
+                @Html.TextBoxFor(a => a.Password, new { @class = "form-control", type = "password" })
+            </div>
+            <input type="submit" value="Login" class="btn btn-default" />
+
+         
+       }
+    </div>
+}
+else
+{
+    <div>@ViewBag.Message</div>
+    <div>
+        <img src="@ViewBag.BarcodeImageUrl" />
+    </div>
+    <div>
+        Manual Setup Code : @ViewBag.SetupCode
+    </div>
+    <div>
+        
+       
+            <input type="text" id="Code" name="CodeDigit" />
+            <input type="submit" id="2fa" class="btn btn-success" onclick="javascript: CODE();"/>
+        
+    </div>
+
+    
+}
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<script>
+    function CODE() {
+        
+        var code = $('#Code').val();
+        
+        var url = "/Login/TwoFactorAuthenticate"
+        $.get(url, { Code: code }, function (Data) {
+            if (Data != "Success") {
+                alert(Data);
+            }
+            else {
+                alert(Data);
+                location.reload();
+            }
+        });
+    }
+
+    
+
+</script>
